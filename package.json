@@ -5,7 +5,8 @@
   "scripts": {
     "start:be": "npx nx serve backend",
     "start:fe": "npx nx dev frontend",
-    "prepare": "husky"
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
   },
   "private": true,
   "dependencies": {
