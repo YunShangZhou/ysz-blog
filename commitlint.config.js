@@ -1,27 +1,38 @@
-module.exports = {
+const Configuration = {
   extends: ['@commitlint/config-conventional'],
+  parserPreset: 'conventional-changelog-atom',
+  formatter: '@commitlint/format',
   rules: {
     'type-enum': [
       2,
       'always',
       [
         'build',
+        'chore',
         'ci',
-        'perf',
+        'docs',
         'feat',
         'fix',
+        'perf',
         'refactor',
-        'docs',
-        'chore',
-        'style',
         'revert',
+        'style',
         'test',
       ],
     ],
-    'type-case': [0],
-    'scope-case': [0],
-    'subject-full-stop': [0],
-    'subject-case': [0, 'never'],
-    'header-max-length': [0, 'always', 72],
+  },
+  ignores: [(commit) => commit === ''],
+  defaultIgnores: true,
+  helpUrl:
+    'https://github.com/conventional-changelog/commitlint/#what-is-commitlint',
+  prompt: {
+    messages: {},
+    questions: {
+      type: {
+        description: 'please input type:',
+      },
+    },
   },
 };
+
+module.exports = Configuration;
