@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:be": "npx nx serve backend",
-    "start:fe": "npx nx dev frontend",
+    "be": "npx nx serve backend",
+    "fe": "npx nx dev frontend",
     "prepare": "husky",
     "commitlint": "commitlint --edit"
   },
