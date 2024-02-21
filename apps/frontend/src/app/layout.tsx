@@ -8,8 +8,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className='h-screen mx-auto w-[80%] flex flex-col'>
-       <Navbar />
+      <body className="h-screen mx-auto w-[80%] flex flex-col">
+        <Navbar />
         {children}
       </body>
     </html>

@@ -4,5 +4,6 @@ export interface paperProps {
   description: string;
   date: Date;
   content: string;
+  tags: string;
   cover?: string;
 }
