@@ -1,6 +1,15 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/assets/*": [
+        "src/assets/*",
+      ],
+      "@/utils/*": [
+        "src/utils/*",
+      ],
+    },
     "jsx": "preserve",
     "allowJs": true,
     "esModuleInterop": true,

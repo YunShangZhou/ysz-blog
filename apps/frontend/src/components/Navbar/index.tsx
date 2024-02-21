@@ -6,7 +6,9 @@ import { SearchOutlined } from '@ant-design/icons';
 const Navbar = () => {
   const [searchText, setSearchText] = useState('');
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    console.log(`=`);
+  };
 
   return (
     <div className="w-full px-[20px] py-[5px] flex align-items-center justify-between border rounded-[8px] border-black border-solid">
