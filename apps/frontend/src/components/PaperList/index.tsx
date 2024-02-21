@@ -21,7 +21,7 @@ const PaperList = (props: IProps) => {
         return (
           <div
             key={id}
-            className="flex flex-col w-full border border-solid border-purple-500"
+            className="flex flex-col w-full border border-solid"
           >
             <span
               suppressHydrationWarning
@@ -35,11 +35,11 @@ const PaperList = (props: IProps) => {
             >
               {title}
             </Link>
-            <span className="bold text-[12px] color-gray-200">
+            <span className="bold mb-[8px] text-[12px] color-gray-200">
               {description}
             </span>
             <Markdown>{limitContent}</Markdown>
-            <div className="flex justify-between border border-solid border-blue-500">
+            <div className="mt-[12px] flex justify-between">
               <div className="flex items-center gap-[8px]">
                 <span className="text-[16px]">标签:</span>
                 <div className="flex items-center gap-[4px]">
@@ -54,7 +54,7 @@ const PaperList = (props: IProps) => {
               </div>
               <Link
                 suppressHydrationWarning
-                href={`/paper/?id=${id}&comment=1`}
+                href={`/paper/?id=${id}#comment`}
                 target="_blank"
               >
                 评论{`(${Math.floor(Math.random() * 100)})`}

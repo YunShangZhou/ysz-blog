@@ -1,7 +1,10 @@
 import { formatDate } from '@/utils/index';
+import { UserOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 import Markdown from 'react-markdown';
-import { mockPaper } from 'src/constant/paper';
-import { paperProps } from 'src/type';
+import { mockCommentList, mockPaper } from 'src/constant/paper';
+import { commentProps, paperProps } from 'src/type';
+
 
 export default async function Paper(props: {
   params: Record<string, any>;
@@ -21,24 +24,50 @@ export default async function Paper(props: {
   // const searchParams = useSearchParams();
   const posToComment = searchParams?.comment; // 若获取到，则自动定位到评论区
 
-  // console.log(`----- 定位到评论区`,document.getElementById('comment-region'));
+  const Comment = (props: commentProps) => {
+    const { id, user, content, date } = props;
+    const time = formatDate(date);
+
+    return <div className='w-full flex p-[12px] border border-solid'>
+      <div className='flex flex-col gap-[4px] mr-[20px] items-center justify-center'>
+        <UserOutlined className='text-[20px]' />
+        <span>{user}</span>
+      </div>
+      <div className='flex-1 flex flex-col'>
+        <span className='w-full mb-[12px] text-[16px]'>{content}</span>
+        <span className='w-full text-right text-[14px] text-gray-400'>{time}</span>
+      </div>
+    </div>
+  }
 
   return (
     <div className="flex flex-col items-center">
-      <span className="text-[24px]">{title}</span>
-      <span className="text-[16px] text-gray-400">{description}</span>
-      <Markdown>{content}</Markdown>
-      <div className="w-full flex justify-end">
-        <span>提交于{time}</span>
+      <Link href="#comment">去评论锚点</Link>
+      <div className='mb-[20px] flex flex-col items-center'>
+        <span className="text-[24px]">{title}</span>
+        <span className="text-[16px] text-gray-400">{description}</span>
+        <Markdown>{content}</Markdown>
+        <span className="w-full mt-[12px] text-right">
+          提交于<span className='ml-[4px] text-gray-500'>{time}</span>
+        </span>
       </div>
+
       {/* 评论区 */}
       <div className="w-full flex flex-col">
-        <div className="h-[900px]">air wall</div>
-        <span id="comment-region" className="text-[24px]">
+        <span id="comment" className="mb-[12px] text-[24px]">
           评论
         </span>
-        <div className="h-[900px]">air wall</div>
+
+        <div className='w-full'>
+          {mockCommentList.map((item) => {
+            return <Comment key={item.id} {...item} />
+          })}
+        </div>
+
       </div>
+
+      <div className='w-full'></div>
+
     </div>
   );
 }

@@ -7,3 +7,10 @@ export interface paperProps {
   tags: string;
   cover?: string;
 }
+
+export interface commentProps {
+  id: string;
+  user: string;
+  content: string;
+  date: Date;
+}
