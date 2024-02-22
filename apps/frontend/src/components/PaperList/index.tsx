@@ -45,7 +45,7 @@ const PaperList = (props: IProps) => {
                 <div className="flex items-center gap-[4px]">
                   {tagsList.map((tag) => {
                     return (
-                      <Link href={`/books/?tag=${tag}`} key={tag}>
+                      <Link className='hover:text-blue-400' href={`/books/?tag=${tag}`} key={tag}>
                         {tag}
                       </Link>
                     );
@@ -53,6 +53,7 @@ const PaperList = (props: IProps) => {
                 </div>
               </div>
               <Link
+                className='hover:text-blue-400'
                 suppressHydrationWarning
                 href={`/paper/?id=${id}#comment`}
                 target="_blank"
