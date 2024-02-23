@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from '../config/configuration';
+import configuration, { databaseProp } from '../config/configuration';
+import { PaperModule } from '../modules/paper/paper.module';
+import { Paper } from '../modules/paper/paper.entity';
 
 @Module({
   imports: [
@@ -12,20 +14,24 @@ import configuration from '../config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
-    // TypeOrmModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (configService: ConfigService) => ({
-    //     type: 'mysql',
-    //     host: configService.get('HOST'),
-    //     port: +configService.get('PORT'),
-    //     username: configService.get('USERNAME'),
-    //     password: configService.get('PASSWORD'),
-    //     database: configService.get('DATABASE'),
-    //     entities: [],
-    //     synchronize: true,
-    //   }),
-    //   inject: [ConfigService],
-    // }),
+    TypeOrmModule.forRootAsync({
+      imports: [
+        ConfigModule,
+        PaperModule
+      ],
+      useFactory: (configService: ConfigService) => {
+        const databaseConfig: databaseProp = configService.get('database');
+
+        console.log(`=== __dirname`, __dirname);
+        return {
+          type: 'mysql',
+          ...databaseConfig,
+          entities: [Paper],
+          synchronize: true,
+        };
+      },
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
