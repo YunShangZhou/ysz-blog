@@ -23,7 +23,7 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node"]
+    "types": ["jest", "node" , "class-validator"]
   },
   "include": [
     "**/*.ts",
