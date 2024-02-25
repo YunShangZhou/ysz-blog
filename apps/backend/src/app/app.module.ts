@@ -5,8 +5,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { databaseProp } from '../config/configuration';
-import { PaperModule } from '../modules/paper/paper.module';
-import { Paper } from '../modules/paper/paper.entity';
+import { PaperModule } from '../module/paper/paper.module';
+import { Paper } from '../module/paper/paper.entity';
 
 @Module({
   imports: [
