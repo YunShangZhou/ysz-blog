@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Comment } from '@/module/comment/comment.entity'
+
 
 @Entity()
 export class Paper {
@@ -31,4 +34,7 @@ export class Paper {
 
   @Column()
   tags: string;
+
+  @OneToMany(() => Comment, comment => comment.paper)
+  comment: Comment[];
 }

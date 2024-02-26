@@ -5,8 +5,11 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { databaseProp } from '../config/configuration';
-import { PaperModule } from '../module/paper/paper.module';
-import { Paper } from '../module/paper/paper.entity';
+
+import { Paper , PaperModule } from '../module/paper';
+import { Reply , ReplyModule } from '../module/reply';
+import { Comment , CommentModule } from '../module/comment/';
+
 
 @Module({
   imports: [
@@ -15,18 +18,14 @@ import { Paper } from '../module/paper/paper.entity';
       load: [configuration],
     }),
     TypeOrmModule.forRootAsync({
-      imports: [
-        ConfigModule,
-        PaperModule
-      ],
+      imports: [ConfigModule, PaperModule , CommentModule, ReplyModule],
       useFactory: (configService: ConfigService) => {
         const databaseConfig: databaseProp = configService.get('database');
 
-        console.log(`=== __dirname`, __dirname);
         return {
           type: 'mysql',
           ...databaseConfig,
-          entities: [Paper],
+          entities: [Paper, Comment,Reply],
           synchronize: true,
         };
       },
