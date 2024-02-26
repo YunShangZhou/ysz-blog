@@ -1,42 +1,32 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { CreateTagDto } from './dto/index.dto';
-import { Repository } from 'typeorm';
-import { Paper } from '../paper/paper.entity';
-import { Tag } from './tag.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
+import { CreateTagDto } from "./dto/index.dto";
+import { Repository } from "typeorm";
+import { Tag } from "./tag.entitiy";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Paper } from "../paper";
 
 @Injectable()
 export class TagService {
-  constructor(
-    @InjectRepository(Tag)
-    private readonly tagRepository: Repository<Tag>,
+    constructor(
+        @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
+        @InjectRepository(Paper) private readonly paperRepository: Repository<Paper>
+    ) { }
 
-  ) {}
+    async create(paperId: string, params: CreateTagDto) {
+        console.log(`==== run async create(paperId:`)
+        const relatedPaper = await this.paperRepository.findOneBy({ id: paperId })
+        console.log(`=== relatedPaper`, relatedPaper)
 
-  async create(id: string, params: CreateTagDto) {
-    // const relatedPaper = await this.paperRepository.findOneBy({
-    //   id,
-    // });
+        if (!relatedPaper) {
+            throw new Error('paper not found')
+        }
 
-    // if (!relatedPaper) {
-    //   throw new Error('Related paper not found');
-    // }
+        const { tag } = params
+        const newTag = await this.tagRepository.create({
+            tag,
+            paper: relatedPaper
+        })
+        this.tagRepository.save(newTag)
+    }
 
-    // const { label } = params;
-    // const newTag = this.tagRepository.create({
-    //   label,
-    //   paper: relatedPaper,
-    // });
-
-    // this.tagRepository.save(newTag);
-  }
-
-  async getCatagories(paperId: string) {
-    // const relatedTag = await this.paperRepository.findOne({
-    //   select: ['tag'],
-    //   where: { id: paperId },
-    //   relations: ['tag'],
-    // });
-    // return relatedTag;
-  }
 }

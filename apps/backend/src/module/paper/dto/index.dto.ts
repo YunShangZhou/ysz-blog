@@ -9,9 +9,6 @@ export class CreatePaperDto {
   content: string;
 
   @IsString()
-  tags: string;
-
-  @IsString()
   @IsOptional()
   description?: string;
 

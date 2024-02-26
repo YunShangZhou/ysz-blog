@@ -1,15 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Module, } from '@nestjs/common'
+import { Paper } from '../paper';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TagService } from './tag.service';
-
-import { Tag } from './tag.entity';
-import { Paper } from '@/module/paper/paper.entity';
-import { Reply } from '@/module/reply/reply.entity';
 import { TagController } from './tag.controller';
+import { TagService } from './tag.service';
+import { Tag } from './tag.entitiy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tag, Paper])],
-  controllers: [TagController],
-  providers: [TagService],
+    imports: [TypeOrmModule.forFeature([Tag, Paper])],
+    controllers: [TagController],
+    providers: [TagService],
 })
-export class TagModule {}
+
+export class TagModule { }

@@ -15,9 +15,11 @@ export class CommentService {
   ) {}
 
   async create(id: string, params: CreateCommentDto) {
+    console.log(`=createComment`)
     const relatedPaper = await this.paperRepository.findOneBy({
       id,
     });
+    console.log(`=createComment relatedPaper`,relatedPaper)
 
     if (!relatedPaper) {
       throw new Error('Related paper not found');

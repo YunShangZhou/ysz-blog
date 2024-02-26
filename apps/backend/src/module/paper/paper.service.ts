@@ -1,15 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { createParamProps } from '../../type/paper';
 import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Paper } from './paper.entity';
+import { Tag } from '../tag';
 
 @Injectable()
 export class PaperService {
   constructor(
     @InjectRepository(Paper)
-    private paperRepository: Repository<Paper>
-  ) {}
+    private paperRepository: Repository<Paper>,
+    // @InjectRepository(Tag)
+    // private tagRepository: Repository<Tag>,
+  ) { }
 
   create(params: createParamProps) {
     return this.paperRepository.save(params);
@@ -62,36 +65,48 @@ export class PaperService {
 
   async getPaperListByTag(tag: string) {
     // notice: 这是一个异步结果，必须加await获取。
-    return await this.paperRepository
-      .createQueryBuilder('paper')
-      .where('paper.tags LIKE :tag')
-      .setParameter('tag', `%${tag}%`)
-      .getMany();
+    // const relatedPaper = await this.tagRepository.find({
+    //   select: ['paper'],
+    //   where: {
+    //     tag,
+    //   },
+    //   relations: ['papers'],
+    // })
+
+    // console.log(`== relatedPaper`);
+    // return relatedPaper;
   }
 
-  // findAndCount 分页获取 & 条件获取
   async getPaperListByPage(page: number, pageSize: number, tag?: string) {
-    const params: Record<string, any> = {
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      order: {
-        id: 'DESC',
-      },
-    };
+    // if (tag) {
+    //   const [item, total] = await this.tagRepository.findAndCount({
+    //     skip: (page - 1) * pageSize,
+    //     take: pageSize
+    //     , where: {
+    //       tag
+    //     },
+    //     order: {
+    //       id: 'DESC'
+    //     },
+    //     relations: ['papers']
+    //   })
+    //   return {
+    //     item, total
+    //   };
+    // }
 
-    const where = {};
-    if (tag) {
-      where['tags'] = Like(`%${tag}%`);
-      Object.assign(params, {
-        where,
-      });
-    }
+    // const params: Record<string, any> = {
+    //   skip: (page - 1) * pageSize,
+    //   take: pageSize,
+    //   order: {
+    //     id: 'DESC',
+    //   },
+    // };
+    // const [items, total] = await this.paperRepository.findAndCount(params);
 
-    const [items, total] = await this.paperRepository.findAndCount(params);
-
-    return {
-      items,
-      total,
-    };
+    // return {
+    //   items,
+    //   total,
+    // };
   }
 }

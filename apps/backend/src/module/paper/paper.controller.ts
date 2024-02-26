@@ -8,6 +8,7 @@ import {
   Post,
   UseFilters,
   ValidationPipe,
+  forwardRef,
 } from '@nestjs/common';
 import { PaperService } from './paper.service';
 import { createParamProps } from '../../type/paper';
@@ -22,7 +23,9 @@ import { EntityNotFoundExceptionFilter } from '../../exception/entityException';
 @Controller('paper')
 @UseFilters(EntityNotFoundExceptionFilter)
 export class PaperController {
-  constructor(private readonly paperService: PaperService) {}
+  constructor(
+    @Inject(forwardRef(()=> PaperService))
+    private readonly paperService: PaperService) {}
 
   @Post('create')
   create(@Body(new ValidationPipe()) createPaperDto: CreatePaperDto) {
@@ -51,17 +54,17 @@ export class PaperController {
     return this.paperService.getPaperList();
   }
 
-  @Get('getPaperListByTag/:tag')
-  getPaperListByTag(@Param('tag') tag: string) {
-    return this.paperService.getPaperListByTag(tag);
-  }
+  // @Get('getPaperListByTag/:tag')
+  // getPaperListByTag(@Param('tag') tag: string) {
+  //   return this.paperService.getPaperListByTag(tag);
+  // }
 
-  @Post('getPaperListByPage')
-  getPaperListByPage(
-    @Body(new ValidationPipe())
-    getPaperListByPageDto: GetPaperListByPageDto
-  ) {
-    const { page, pageSize, tag } = getPaperListByPageDto;
-    return this.paperService.getPaperListByPage(page, pageSize, tag);
-  }
+  // @Post('getPaperListByPage')
+  // getPaperListByPage(
+  //   @Body(new ValidationPipe())
+  //   getPaperListByPageDto: GetPaperListByPageDto
+  // ) {
+  //   const { page, pageSize, tag } = getPaperListByPageDto;
+  //   return this.paperService.getPaperListByPage(page, pageSize, tag);
+  // }
 }

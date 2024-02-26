@@ -7,8 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Comment } from '@/module/comment/comment.entity'
-import { Tag } from '../tag';
-
+import { Tag } from '../tag/tag.entitiy';
 
 @Entity()
 export class Paper {
@@ -22,7 +21,7 @@ export class Paper {
   description?: string;
 
   @Column({ nullable: true })
-  cover: string;
+  cover?: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -36,9 +35,8 @@ export class Paper {
   @OneToMany(() => Comment, comment => comment.paper)
   comment: Comment[];
 
-  // @OneToMany(() => Tag, tag => tag.paper)
-  // tag: Tag[];
-
-  @Column()
-  tags: string;
+  // @Column()
+  // tag: string;
+  @OneToMany(() => Tag, tag => tag.paper)
+  tag: Tag[];
 }

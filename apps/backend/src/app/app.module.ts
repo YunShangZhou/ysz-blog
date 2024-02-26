@@ -23,7 +23,7 @@ import { Tag, TagModule } from '../module/tag/';
         PaperModule,
         CommentModule,
         ReplyModule,
-        // TagModule,
+        TagModule,
       ],
       useFactory: (configService: ConfigService) => {
         const databaseConfig: databaseProp = configService.get('database');
@@ -34,7 +34,7 @@ import { Tag, TagModule } from '../module/tag/';
             Paper,
             Comment,
             Reply,
-            // Tag
+            Tag
           ],
           synchronize: true,
         };
