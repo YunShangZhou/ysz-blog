@@ -1,21 +1,21 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { CreateCommentDto } from './dto/index.dto';
-import { CommentService } from './comment.service';
+import { CreateTagDto } from './dto/index.dto';
+import { TagService } from './tag.service';
 
-@Controller('comment')
-export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+@Controller('tag')
+export class TagController {
+  constructor(private readonly tagService: TagService) {}
 
   @Post('create/:paperId')
   async create(
     @Param('paperId') paperId: string,
-    @Body() createCommentDto: CreateCommentDto
+    @Body() createTagDto: CreateTagDto
   ) {
-    return this.commentService.create(paperId, createCommentDto);
+    return this.tagService.create(paperId, createTagDto);
   }
 
-  @Get('getAll/:paperId')
-  async getAll(@Param('paperId') paperId:string) {
-    return this.commentService.getAll(paperId);
+  @Get('getCatagories/:paperId')
+  async getCatagories(@Param('paperId') paperId:string) {
+    return this.tagService.getCatagories(paperId);
   }
 }

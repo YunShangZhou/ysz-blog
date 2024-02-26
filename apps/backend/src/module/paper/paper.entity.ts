@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Comment } from '@/module/comment/comment.entity'
+import { Tag } from '../tag';
 
 
 @Entity()
@@ -35,8 +36,8 @@ export class Paper {
   @OneToMany(() => Comment, comment => comment.paper)
   comment: Comment[];
 
-  // @OneToMany(() => Comment, comment => comment.paper)
-  // comment: Comment[];
+  // @OneToMany(() => Tag, tag => tag.paper)
+  // tag: Tag[];
 
   @Column()
   tags: string;

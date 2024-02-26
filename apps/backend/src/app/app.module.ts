@@ -6,10 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { databaseProp } from '../config/configuration';
 
-import { Paper , PaperModule } from '../module/paper';
-import { Reply , ReplyModule } from '../module/reply';
-import { Comment , CommentModule } from '../module/comment/';
-
+import { Paper, PaperModule } from '../module/paper';
+import { Reply, ReplyModule } from '../module/reply';
+import { Comment, CommentModule } from '../module/comment/';
+import { Tag, TagModule } from '../module/tag/';
 
 @Module({
   imports: [
@@ -18,14 +18,24 @@ import { Comment , CommentModule } from '../module/comment/';
       load: [configuration],
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, PaperModule , CommentModule, ReplyModule],
+      imports: [
+        ConfigModule,
+        PaperModule,
+        CommentModule,
+        ReplyModule,
+        // TagModule,
+      ],
       useFactory: (configService: ConfigService) => {
         const databaseConfig: databaseProp = configService.get('database');
-
         return {
           type: 'mysql',
           ...databaseConfig,
-          entities: [Paper, Comment,Reply],
+          entities: [
+            Paper,
+            Comment,
+            Reply,
+            // Tag
+          ],
           synchronize: true,
         };
       },

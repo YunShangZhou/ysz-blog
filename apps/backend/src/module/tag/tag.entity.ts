@@ -1,21 +1,15 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, } from 'typeorm';
 import { Reply } from '@/module/reply/reply.entity';
 import { Paper } from '@/module/paper/paper.entity';
 
 @Entity()
-export class Comment {
+export class Tag {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
-  text: string;
+  label: string;
 
-  @Column()
-  user: string;
-
-  @OneToMany((type) => Reply, (reply) => reply.comment)
-  reply: Reply[];
-
-  @ManyToOne((type) => Paper, (paper) => paper.comment)
-  paper: Paper;
+  // @ManyToOne((type) => Paper, (paper) => paper.tag)
+  // paper: Paper;
 }
