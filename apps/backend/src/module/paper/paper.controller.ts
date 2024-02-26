@@ -11,13 +11,13 @@ import {
 } from '@nestjs/common';
 import { PaperService } from './paper.service';
 import { createParamProps } from '../../type/paper';
-import { TypeORMExceptionFilter } from '../../Exception/typeormException';
+import { TypeORMExceptionFilter } from '../../exception/typeormException';
 import {
   CreatePaperDto,
   GetPaperListByPageDto,
   UpdatePaperDto,
 } from './dto/index.dto';
-import { EntityNotFoundExceptionFilter } from '../../Exception/entityException';
+import { EntityNotFoundExceptionFilter } from '../../exception/entityException';
 
 @Controller('paper')
 @UseFilters(EntityNotFoundExceptionFilter)
@@ -36,14 +36,14 @@ export class PaperController {
     return this.paperService.update(id, data);
   }
 
-  @Get('delete/:id')
-  delete(@Param('id') id: string) {
-    return this.paperService.delete(id);
+  @Get('delete/:paperId')
+  delete(@Param('paperId') paperId: string) {
+    return this.paperService.delete(paperId);
   }
 
-  @Get('getPaper/:id')
-  getPaper(@Param('id') id: string) {
-    return this.paperService.getPaper(id);
+  @Get('getPaper/:paperId')
+  getPaper(@Param('paperId') paperId: string) {
+    return this.paperService.getPaper(paperId);
   }
 
   @Get('getPaperList')

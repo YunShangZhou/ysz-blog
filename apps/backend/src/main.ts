@@ -8,7 +8,7 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { ResponseInterceptor } from './interceptor';
-import { ErrorFilter } from './Exception/errorException';
+import { ErrorFilter } from './exception/errorException';
 
 const CONNECTION_PORT = 3002;
 

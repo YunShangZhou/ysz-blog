@@ -6,16 +6,16 @@ import { CommentService } from './comment.service';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post('create/:id')
+  @Post('create/:paperId')
   async create(
-    @Param('id') id: string,
+    @Param('paperId') paperId: string,
     @Body() createCommentDto: CreateCommentDto
   ) {
-    return this.commentService.create(id, createCommentDto);
+    return this.commentService.create(paperId, createCommentDto);
   }
 
-  @Get('getAll/:id')
-  async getAll(@Param('id') paperId:string) {
+  @Get('getAll/:paperId')
+  async getAll(@Param('paperId') paperId:string) {
     return this.commentService.getAll(paperId);
   }
 }

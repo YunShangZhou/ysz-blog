@@ -6,8 +6,8 @@ import { ReplyService } from './reply.service'
 export class ReplyController {
   constructor(private readonly ReplyService: ReplyService){}
 
-  @Post('/create/:id')
-  async create(@Param('id') id: string, @Body() createReplyDto: CreateReplyDto) {
-    return this.ReplyService.create(id, createReplyDto);
+  @Post('/create/:commentId')
+  async create(@Param('commentId') commentId: string, @Body() createReplyDto: CreateReplyDto) {
+    return this.ReplyService.create(commentId, createReplyDto);
   }
 }
