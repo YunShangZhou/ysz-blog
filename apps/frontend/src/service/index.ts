@@ -1,3 +1,9 @@
 import books from './books';
+import home from './home';
+import paper from './paper';
 
-export default { books };
+export default {
+  books,
+  home,
+  paper,
+};

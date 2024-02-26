@@ -32,9 +32,12 @@ export class Paper {
   @Column()
   content: string;
 
-  @Column()
-  tags: string;
-
   @OneToMany(() => Comment, comment => comment.paper)
   comment: Comment[];
+
+  // @OneToMany(() => Comment, comment => comment.paper)
+  // comment: Comment[];
+
+  @Column()
+  tags: string;
 }

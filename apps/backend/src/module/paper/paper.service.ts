@@ -23,8 +23,37 @@ export class PaperService {
     return this.paperRepository.update(id, params);
   }
 
-  getPaper(id: string) {
-    return this.paperRepository.findOneOrFail({ where: { id } });
+  async getPaper(id: string) {
+    const current = await this.paperRepository.findOneOrFail({
+      where: { id },
+    });
+    const { createdAt: currentPaperCreatedAt } = current;
+
+    const previous = await this.paperRepository
+      .createQueryBuilder('paper')
+      .select(['paper.id', 'paper.title'])
+      .where('paper.createdAt < :currentPaperCreatedAt', {
+        currentPaperCreatedAt,
+      })
+      .orderBy('createdAt', 'DESC')
+      .take(1)
+      .getOne();
+
+    const next = await this.paperRepository
+      .createQueryBuilder('paper')
+      .select(['paper.id', 'paper.title'])
+      .where('paper.createdAt > :currentPaperCreatedAt', {
+        currentPaperCreatedAt: new Date(currentPaperCreatedAt.getTime() + 1000), // 需要手动加一秒，否则查询会包括当前文章
+      })
+      .orderBy('createdAt', 'ASC')
+      .take(1)
+      .getOne();
+
+    return {
+      previous,
+      current,
+      next,
+    };
   }
 
   getPaperList() {
@@ -64,5 +93,9 @@ export class PaperService {
       items,
       total,
     };
+  }
+
+  async getCategories() {
+
   }
 }

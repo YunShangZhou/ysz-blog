@@ -3,6 +3,11 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
 
+const serverMap = {
+  dev: 'http://localhost:3002/api',
+  prod: 'http://localhost:3002/api',
+};
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
@@ -12,6 +17,20 @@ const nextConfig = {
     // Set this to true if you would like to use SVGR
     // See: https://github.com/gregberge/svgr
     svgr: false,
+  },
+  async rewrites() {
+    const env = process.env.NODE_ENV === 'development' ? 'dev' : 'prod';
+
+    return [
+      {
+        source: '/dev',
+        destination: serverMap[env],
+      },
+      {
+        source: '/prod',
+        destination: serverMap[env],
+      },
+    ];
   },
 };
 
