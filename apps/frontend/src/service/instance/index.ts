@@ -9,4 +9,8 @@ export const baseInstance = axios.create({
   timeout: 3000, // 3s
 });
 
+export const defaultInstance = axios.create({
+  timeout: 3000, // 3s
+});
 baseInstance.interceptors.response.use(responseHandler)
+defaultInstance.interceptors.response.use(responseHandler)

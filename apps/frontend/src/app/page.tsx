@@ -9,6 +9,7 @@ import Link from 'next/link';
 import PaperList from 'src/components/PaperList';
 import { Suspense } from 'react';
 import service from 'src/service';
+import { defaultInstance } from 'src/service/instance';
 
 const categories = [
   {
@@ -32,8 +33,10 @@ const Main = async () => {
     //   pageSize: 4,
     // });
     // console.log(`=== dataSource`,dataSource)
-    const categories = await fetch('http://localhost:3002/api/home/getCategories').then(res=>res.json());
-    console.log(`=== categories`,categories)
+    // const categories = await fetch('http://localhost:3002/api/home/getCategories').then(res=>res.json());
+    const res = await defaultInstance.get('http://localhost:3002/api/tag/getCategories');
+    // const { code , data } = res;
+    console.log(`===+++++++++++++ res`,res)
 
     return (
       <div className="flex-1 flex flex-col gap-[20px] p-[12px] h-full border border-solid border-black-50">

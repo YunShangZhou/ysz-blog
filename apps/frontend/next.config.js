@@ -18,17 +18,23 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+
+  /**
+   * # notice 
+   * - 本地代理转发只适用于use client下的axios。
+   * - 如果在服务端组件开头调接口，此时重写函数是尚未初始化的。
+  */
   async rewrites() {
     const env = process.env.NODE_ENV === 'development' ? 'dev' : 'prod';
 
     return [
       {
         source: '/dev/:path*',
-        destination: serverMap[env]+"/:path*",
+        destination: serverMap[env] + "/:path*",
       },
       {
         source: '/prod/:path*',
-        destination: serverMap[env]+"/:path*",
+        destination: serverMap[env] + "/:path*",
       },
     ];
   },
