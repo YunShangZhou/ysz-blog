@@ -23,12 +23,12 @@ const nextConfig = {
 
     return [
       {
-        source: '/dev',
-        destination: serverMap[env],
+        source: '/dev/:path*',
+        destination: serverMap[env]+"/:path*",
       },
       {
-        source: '/prod',
-        destination: serverMap[env],
+        source: '/prod/:path*',
+        destination: serverMap[env]+"/:path*",
       },
     ];
   },

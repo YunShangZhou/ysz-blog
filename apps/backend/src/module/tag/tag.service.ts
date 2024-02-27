@@ -60,6 +60,9 @@ export class TagService {
                 tag,
             },
             relations: ['paper'],
+            order: {
+                id: 'DESC'
+            }
         })
 
         return {

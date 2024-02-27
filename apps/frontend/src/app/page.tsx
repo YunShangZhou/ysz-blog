@@ -8,6 +8,7 @@ import avatarImg from '@/assets/image/avatar.png';
 import Link from 'next/link';
 import PaperList from 'src/components/PaperList';
 import { Suspense } from 'react';
+import service from 'src/service';
 
 const categories = [
   {
@@ -26,17 +27,25 @@ const categories = [
 
 const Main = async () => {
   try {
-    const dataSource = await mockPaperList;
+    // const dataSource = await service.home.getPaginationPaperList({
+    //   page: 1,
+    //   pageSize: 4,
+    // });
+    // console.log(`=== dataSource`,dataSource)
+    const categories = await fetch('http://localhost:3002/api/home/getCategories').then(res=>res.json());
+    console.log(`=== categories`,categories)
+
     return (
       <div className="flex-1 flex flex-col gap-[20px] p-[12px] h-full border border-solid border-black-50">
         <div className="bold text-[24px]">最新文章</div>
-        <PaperList dataSource={dataSource} />
+        {/* <PaperList dataSource={dataSource} /> */}
         <Link className="text-blue-500" href="/books">
           更多内容...
         </Link>
       </div>
     );
   } catch (err) {
+    console.log(`=== err`, err);
     notFound();
   }
 };
