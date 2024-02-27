@@ -1,26 +1,27 @@
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { CreateCommentDto } from './dto/index.dto';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Paper } from '../paper/paper.entity';
 import { Comment } from './comment.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CommentService {
+  private paperRepository: Repository<Paper>
+  private commentRepository: Repository<Comment>
+
   constructor(
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
-    @InjectRepository(Paper)
-    private readonly paperRepository: Repository<Paper>
-  ) {}
+    @InjectEntityManager() manager: EntityManager
+  ) {
+    this.paperRepository = manager.getRepository(Paper);
+    this.commentRepository = manager.getRepository(Comment);
+  }
 
   async create(id: string, params: CreateCommentDto) {
-    console.log(`=createComment`)
     const relatedPaper = await this.paperRepository.findOneBy({
       id,
     });
-    console.log(`=createComment relatedPaper`,relatedPaper)
-
+    
     if (!relatedPaper) {
       throw new Error('Related paper not found');
     }

@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Inject, Param, Post, ValidationPipe, forwardRef } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Param, Post, Query, ValidationPipe, forwardRef } from "@nestjs/common";
 import { TagService } from "./tag.service";
-import { CreateTagDto } from "./dto/index.dto";
+import { CreateTagDto, PaginationDto } from "./dto/index.dto";
 
 @Controller('tag')
 export class TagController {
     constructor(
-        @Inject(forwardRef(()=> TagService))
+        @Inject(forwardRef(() => TagService))
         private readonly tagService: TagService) { }
 
     @Post('create/:paperId')
@@ -14,5 +14,15 @@ export class TagController {
         @Body() createTagDto: CreateTagDto
     ) {
         return this.tagService.create(paperId, createTagDto)
+    }
+
+    @Get('getCategories')
+    getCategories() {
+        return this.tagService.getCategories();
+    }
+
+    @Post('getPaperListByTagAndCount')
+    getPaperListByTagAndCount(@Body() paginationDto: PaginationDto) {
+        return this.tagService.getPaperListByTagAndCount(paginationDto);
     }
 }

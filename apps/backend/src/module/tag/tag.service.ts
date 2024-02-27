@@ -1,21 +1,25 @@
 import { Injectable } from "@nestjs/common";
 import { CreateTagDto } from "./dto/index.dto";
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 import { Tag } from "./tag.entitiy";
-import { InjectRepository } from "@nestjs/typeorm";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { Paper } from "../paper";
+
 
 @Injectable()
 export class TagService {
+    private paperRepository: Repository<Paper>
+    private tagRepository: Repository<Tag>
+
     constructor(
-        @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
-        @InjectRepository(Paper) private readonly paperRepository: Repository<Paper>
-    ) { }
+        @InjectEntityManager() manager: EntityManager
+    ) {
+        this.paperRepository = manager.getRepository(Paper);
+        this.tagRepository = manager.getRepository(Tag);
+    }
 
     async create(paperId: string, params: CreateTagDto) {
-        console.log(`==== run async create(paperId:`)
         const relatedPaper = await this.paperRepository.findOneBy({ id: paperId })
-        console.log(`=== relatedPaper`, relatedPaper)
 
         if (!relatedPaper) {
             throw new Error('paper not found')
@@ -29,4 +33,37 @@ export class TagService {
         this.tagRepository.save(newTag)
     }
 
+    async getCategories() {
+        const result = await this.tagRepository.createQueryBuilder('tag')
+            .select('tag.tag')
+            .addSelect('COUNT(*)', 'count')
+            .groupBy('tag')
+            .getRawMany();
+
+        return result.map(item => ({
+            tag: item.tag_tag,
+            count: item.count
+        }))
+    }
+
+    async getPaperListByTagAndCount(params: {
+        page: number,
+        pageSize: number,
+        tag: string
+    }) {
+        const { tag, page, pageSize } = params;
+
+        const [items, total] = await this.tagRepository.findAndCount({
+            skip: pageSize * (page - 1),
+            take: pageSize,
+            where: {
+                tag,
+            },
+            relations: ['paper'],
+        })
+
+        return {
+            items, total
+        };
+    }
 }

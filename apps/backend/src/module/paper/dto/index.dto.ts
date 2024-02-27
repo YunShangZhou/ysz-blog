@@ -32,8 +32,4 @@ export class GetPaperListByPageDto {
 
   @IsInt()
   pageSize: number;
-
-  @IsString()
-  @IsOptional()
-  tag?: string;
 }

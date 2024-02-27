@@ -54,17 +54,12 @@ export class PaperController {
     return this.paperService.getPaperList();
   }
 
-  // @Get('getPaperListByTag/:tag')
-  // getPaperListByTag(@Param('tag') tag: string) {
-  //   return this.paperService.getPaperListByTag(tag);
-  // }
-
-  // @Post('getPaperListByPage')
-  // getPaperListByPage(
-  //   @Body(new ValidationPipe())
-  //   getPaperListByPageDto: GetPaperListByPageDto
-  // ) {
-  //   const { page, pageSize, tag } = getPaperListByPageDto;
-  //   return this.paperService.getPaperListByPage(page, pageSize, tag);
-  // }
+  @Post('getPaperListByPage')
+  getPaperListByPage(
+    @Body(new ValidationPipe())
+    getPaperListByPageDto: GetPaperListByPageDto
+  ) {
+    const { page, pageSize } = getPaperListByPageDto;
+    return this.paperService.getPaperListByPage(page, pageSize);
+  }
 }

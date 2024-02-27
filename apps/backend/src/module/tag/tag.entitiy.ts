@@ -1,7 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, EntityRepository, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Paper } from "../paper";
-
-
 
 @Entity()
 export class Tag {

@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReplyDto } from './dto/index.dto';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 
 import { Reply } from './reply.entity';
 import { Comment } from '@/module/comment';
 
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class ReplyService {
+  private replyRepository: Repository<Reply>
+  private commentRepository: Repository<Comment>
+
   constructor(
-    @InjectRepository(Reply)
-    private readonly replyRepository: Repository<Reply>,
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>
-  ) {}
+      @InjectEntityManager() manager: EntityManager
+  ) {
+      this.replyRepository = manager.getRepository(Reply);
+      this.commentRepository = manager.getRepository(Comment);
+  }
 
   async create(commentId: string, params: CreateReplyDto) {
     const relatedComment = await this.commentRepository.findOneBy({
