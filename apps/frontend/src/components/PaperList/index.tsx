@@ -27,7 +27,7 @@ const PaperList = (props: IProps) => {
             </span>
             <Link
               href={`/paper/?id=${id}`}
-              className="bold text-[20px] hover:text-blue-400"
+              className="w-fit bold text-[20px] hover:text-blue-400"
             >
               {title}
             </Link>

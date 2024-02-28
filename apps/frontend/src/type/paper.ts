@@ -11,7 +11,7 @@ export interface paperProps {
 }
 
 export interface commentProps {
-  id: string;
+  id: number;
   user: string;
   text: string;
   createdAt: Date;
@@ -22,3 +22,11 @@ export interface commentProps {
     user: string;
   }[];
 }
+
+export interface replyProps {
+  id: number;
+  user: string;
+  text: string;
+  createdAt: Date;
+}
+

@@ -8,13 +8,24 @@ import Markdown from 'react-markdown';
 import { mockCommentList, mockPaper } from 'src/constant/paper';
 import service from 'src/service';
 import { proxySuffix } from 'src/service/proxy';
-import { commentProps, paperProps } from 'src/type';
+import { commentProps, paperProps, replyProps } from 'src/type';
 
 export default async function Paper(props: {
   params: Record<string, any>;
   searchParams: Record<string, any>;
 }) {
   const { searchParams } = props;
+
+  if (!searchParams.id) {
+    notFound();
+  }
+
+  let formAction: string = `${proxySuffix}`
+  if (searchParams.commentId) {
+    formAction += `/reply/create/${searchParams.id}/${searchParams.commentId}`
+  } else {
+    formAction += `/comment/create/${searchParams.id}`
+  }
 
   // const res: { data: paperProps } = {
   //   data: mockPaper,
@@ -36,20 +47,56 @@ export default async function Paper(props: {
     const time = formatDate(createdAt);
 
     return (
-      <div className="w-full flex p-[12px] border border-solid">
-        <div className="flex flex-col gap-[4px] mr-[20px] items-center justify-center">
-          <UserOutlined className="text-[20px]" />
+      <div id={`comment-${id}`} className="w-full flex border border-solid">
+        <div className="w-[120px] p-[12px] pt-[24px] flex flex-col gap-[4px] items-center border border-solid border-black-500">
+          <UserOutlined className="text-[24px]" />
           <span>{user}</span>
         </div>
-        <div className="flex-1 flex flex-col">
-          <span className="w-full mb-[12px] text-[16px]">{text}</span>
-          <span className="w-full text-right text-[14px] text-gray-400">
-            {time}
-          </span>
+        <div className="flex-1 flex flex-col border border-solid border-black-500">
+          <span className="w-full p-[12px] mb-[12px] text-[16px]">{text}</span>
+          <div className='w-full p-[12px] flex items-center justify-end gap-[12px]'>
+            <span className="text-[14px] text-gray-400">
+              {time}
+            </span>
+            <Link href={`/paper/?id=${searchParams.id}&commentId=${id}#comment-reply-${id}`}
+              id={`comment-reply-${id}`}
+              className='text-[14px] cursor:pointer hover:text-blue-400'>回复</Link>
+          </div>
+
+          <div className='w-full flex flex-col'>
+            {reply.length > 0 &&
+              reply.map((item) => {
+                return <Reply key={item.id} {...item} />
+              })
+            }
+          </div>
         </div>
+
       </div>
     );
   };
+
+  const Reply = (props: replyProps) => {
+    const { id, user, text, createdAt } = props;
+    const time = formatDate(createdAt);
+
+    return (
+      <div id={`reply-${id}`} className="w-full flex border border-solid">
+        <div className="w-[120px] flex flex-col gap-[4px] items-center justify-center border border-solid border-black-500">
+          <UserOutlined className="text-[24px]" />
+          <span>{user}</span>
+        </div>
+        <div className="flex-1 flex flex-col border border-solid border-black-500">
+          <span className="w-full p-[12px] mb-[12px] text-[16px]">{text}</span>
+          <div className='w-full p-[12px] flex items-center justify-end gap-[12px]'>
+            <span className="text-[14px] text-gray-400">
+              {time}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const onFinish = (values: any) => {
     console.log('Success:', values);
@@ -89,7 +136,7 @@ export default async function Paper(props: {
       </div>
 
       {/* 评论区 */}
-      <div className="w-full flex flex-col mb-[20px]">
+      <div className="w-full flex flex-col mb-[20px] border border-solid border-black-400">
         <span id="comment" className="mb-[12px] text-[24px]">
           评论
         </span>
@@ -104,12 +151,12 @@ export default async function Paper(props: {
       </div>
 
       {/* 留言区 */}
-      <div className="w-full flex flex-col border border-solid border-black-500">
+      <div className="w-full flex flex-col pb-[32px] border border-solid border-black-500">
         <span className="mb-[12px] text-[24px]">留言板</span>
         <form
-          action={`${proxySuffix}/comment/create/${searchParams.id}`}
+          action={formAction}
           method="post"
-          className="flex flex-col gap-[8px]"
+          className="flex flex-col gap-[24px]"
         >
           <div className="w-full flex gap-[8px]">
             <label className="w-[60px]">用户名: </label>
@@ -133,11 +180,20 @@ export default async function Paper(props: {
               maxLength={300}
             />
           </div>
-          <div className="w-full flex justify-end">
+          <div className="w-full flex justify-end items-center gap-[8px]">
+            {
+              !!searchParams.commentId && <Link
+                className='text-[14px] hover:text-blue-500'
+                href={`/paper/?id=${searchParams.id}`}
+              >
+                取消回复
+              </Link>
+            }
+
             <Button
               htmlType="submit"
-              type="primary"
-              className="bg-blue-500"
+              type="link"
+              className="text-[14px]"
             >
               提交
             </Button>

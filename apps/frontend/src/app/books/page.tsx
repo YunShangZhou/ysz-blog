@@ -4,7 +4,7 @@ import PaperList from 'src/components/PaperList';
 import { mockPaperList } from 'src/constant';
 import { paperProps } from 'src/type';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { notFound, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createQueryString } from '@/utils/index';
 import { useEffect, useState } from 'react';
 
@@ -25,7 +25,12 @@ export default function Books() {
 
   const searchParams = useSearchParams();
   const page = searchParams.get('page') || 1;
+  const pageSize = searchParams.get('pageSize') || 1;
   const tag = searchParams.get('tag');
+
+  if (!page || !pageSize) {
+    notFound()
+  }
 
   const [dataSource, setDataSource] = useState<paperProps[]>(mockPaperList);
 

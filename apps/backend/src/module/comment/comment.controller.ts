@@ -1,21 +1,34 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Response, Request } from '@nestjs/common';
 import { CreateCommentDto } from './dto/index.dto';
 import { CommentService } from './comment.service';
 
 @Controller('comment')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(private readonly commentService: CommentService) { }
 
   @Post('create/:paperId')
+  // @Redirect('http://localhost:3000/paper',302)
   async create(
     @Param('paperId') paperId: string,
-    @Body() createCommentDto: CreateCommentDto
+    @Body() createCommentDto: CreateCommentDto,
+    @Response() res,
+    @Request() req
   ) {
-    return this.commentService.create(paperId, createCommentDto);
+    this.commentService.create(paperId, createCommentDto);
+
+    // notice: @Redirect的override并没有生效
+    // return {
+    //   url: `http://localhost:3000/paper/?id=${paperId}`
+    // }
+
+    const origin = req.get('origin');
+    const redirectUrl = `${origin}/paper/?id=${paperId}`
+    // 代替方案
+    res.redirect(redirectUrl)
   }
 
   @Get('getAll/:paperId')
-  async getAll(@Param('paperId') paperId:string) {
+  async getAll(@Param('paperId') paperId: string) {
     return this.commentService.getAll(paperId);
   }
 }
