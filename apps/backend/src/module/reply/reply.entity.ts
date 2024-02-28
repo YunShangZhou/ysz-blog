@@ -1,17 +1,27 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Comment } from "@/module/comment/comment.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Comment } from '@/module/comment/comment.entity';
 
 @Entity()
 export class Reply {
-    @PrimaryGeneratedColumn()
-    id: string;
+  @PrimaryGeneratedColumn()
+  id: string;
 
-    @Column()
-    text: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Column()
-    user: string;
+  @Column()
+  text: string;
 
-    @ManyToOne((type) => Comment, (comment) => comment.reply)
-    comment: Comment;
+  @Column()
+  user: string;
+
+  @ManyToOne((type) => Comment, (comment) => comment.reply)
+  comment: Comment;
 }

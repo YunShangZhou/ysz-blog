@@ -27,30 +27,36 @@ const categories = [
 
 const Main = async () => {
   try {
-    // const dataSource = await service.home.getPaginationPaperList({
-    //   page: 1,
-    //   pageSize: 4,
-    // });
-    // console.log(`=== dataSource`,dataSource)
-    const categories = await fetch('http://localhost:3002/api/home/getCategories').then(res=>res.json());
-    console.log(`=== categories`,categories)
+    let dataSource: any[] = [];
+    const { code, data }= await service.home.getPaginationPaperList({
+      page: 1,
+      pageSize: 4,
+    });
+    if (code === 0) {
+      dataSource = data.items;
+    }
 
     return (
       <div className="flex-1 flex flex-col gap-[20px] p-[12px] h-full border border-solid border-black-50">
         <div className="bold text-[24px]">最新文章</div>
-        {/* <PaperList dataSource={dataSource} /> */}
+        <PaperList dataSource={dataSource} />
         <Link className="text-blue-500" href="/books">
           更多内容...
         </Link>
       </div>
     );
   } catch (err) {
-    console.log(`=== err`, err);
     notFound();
   }
 };
 
-const Sidebar = () => {
+const Sidebar = async () => {
+  let categories: any[] = [];
+  const { code, data } = await service.home.getCategories();
+  if (code === 0) {
+    categories = data;
+  }
+
   return (
     <div className="flex flex-col gap-[20px] w-[20%] border border-solid border-red-500 h-fit">
       {/* 博主信息 */}
@@ -82,7 +88,7 @@ const Sidebar = () => {
               <Link
                 className="hover:text-blue-400"
                 key={tag}
-                href={`/books/?tag=${tag}`}
+                href={`/books/?tag=${tag}&page=${1}&pageSize=${4}`}
               >
                 {`${tag}(${count})`}
               </Link>
@@ -99,9 +105,11 @@ export default async function Index(props: any) {
     // whole
     <div className="h-full w-full border pt-[12px] px-[12px] flex gap-[20px]">
       {/* 文章列表 */}
-      <Suspense fallback={<div>数据加载中...</div>}>{await Main()}</Suspense>
+      <Suspense fallback={<div>主内容加载中...</div>}>{await Main()}</Suspense>
       {/* 侧边栏 */}
-      <Sidebar />
+      <Suspense fallback={<div>侧边栏加载中...</div>}>
+        {await Sidebar()}
+      </Suspense>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 import { Reply } from '@/module/reply/reply.entity';
 import { Paper } from '@/module/paper/paper.entity';
 
@@ -6,6 +6,9 @@ import { Paper } from '@/module/paper/paper.entity';
 export class Comment {
   @PrimaryGeneratedColumn()
   id: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Column()
   text: string;

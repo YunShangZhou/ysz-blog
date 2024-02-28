@@ -7,11 +7,9 @@ import { Tag } from '../tag';
 
 @Injectable()
 export class PaperService {
-  private paperRepository: Repository<Paper>
+  private paperRepository: Repository<Paper>;
 
-  constructor(
-    @InjectEntityManager() manager: EntityManager
-  ) {
+  constructor(@InjectEntityManager() manager: EntityManager) {
     this.paperRepository = manager.getRepository(Paper);
   }
 
@@ -30,6 +28,7 @@ export class PaperService {
   async getPaper(id: string) {
     const current = await this.paperRepository.findOneOrFail({
       where: { id },
+      relations: ['tag' , 'comment'],
     });
     const { createdAt: currentPaperCreatedAt } = current;
 
@@ -61,7 +60,9 @@ export class PaperService {
   }
 
   getPaperList() {
-    return this.paperRepository.find();
+    return this.paperRepository.find({
+      relations: ['tag'],
+    });
   }
 
   async getPaperListByPage(page: number, pageSize: number) {
@@ -72,7 +73,14 @@ export class PaperService {
         id: 'DESC',
       },
     };
-    const [items, total] = await this.paperRepository.findAndCount(params);
+    const [items, total] = await this.paperRepository.findAndCount({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      order: {
+        id: 'DESC',
+      },
+      relations: ['tag'],
+    });
 
     return {
       items,

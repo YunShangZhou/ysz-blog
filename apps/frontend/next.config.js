@@ -32,6 +32,7 @@ const nextConfig = {
       },
     ];
   },
+
 };
 
 const plugins = [

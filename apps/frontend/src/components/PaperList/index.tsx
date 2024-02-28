@@ -13,16 +13,12 @@ const PaperList = (props: IProps) => {
   return (
     <div className="flex flex-col gap-[12px]">
       {dataSource?.map((item) => {
-        let { id, title, date, description, content, tags } = item;
-        const time = formatDate(date)
+        let { id, title, createdAt, description, content, tag } = item;
+        const time = formatDate(createdAt);
         const limitContent = content.slice(0, 80);
-        const tagsList = tags.split(',');
 
         return (
-          <div
-            key={id}
-            className="flex flex-col w-full border border-solid"
-          >
+          <div key={id} className="flex flex-col w-full border border-solid">
             <span
               suppressHydrationWarning
               className="text-[12px] color-gray-300"
@@ -43,9 +39,14 @@ const PaperList = (props: IProps) => {
               <div className="flex items-center gap-[8px]">
                 <span className="text-[16px]">标签:</span>
                 <div className="flex items-center gap-[4px]">
-                  {tagsList.map((tag) => {
+                  {!tag.length && '暂无'}
+                  {tag.map(({ tag }) => {
                     return (
-                      <Link className='hover:text-blue-400' href={`/books/?tag=${tag}`} key={tag}>
+                      <Link
+                        key={tag}
+                        className="hover:text-blue-400"
+                        href={`/books/?tag=${tag}`}
+                      >
                         {tag}
                       </Link>
                     );
@@ -53,7 +54,7 @@ const PaperList = (props: IProps) => {
                 </div>
               </div>
               <Link
-                className='hover:text-blue-400'
+                className="hover:text-blue-400"
                 suppressHydrationWarning
                 href={`/paper/?id=${id}#comment`}
                 target="_blank"
