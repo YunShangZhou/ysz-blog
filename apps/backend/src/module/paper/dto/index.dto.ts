@@ -15,6 +15,8 @@ export class CreatePaperDto {
   @IsString()
   @IsOptional()
   cover?: string;
+
+  labels: string[];
 }
 
 export class UpdatePaperDto {

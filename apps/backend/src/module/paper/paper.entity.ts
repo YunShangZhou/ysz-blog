@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { Comment } from '@/module/comment/comment.entity'
 import { Tag } from '../tag/tag.entitiy';
+import { Label } from '../label/entities/label.entity';
 
 @Entity()
 export class Paper {
@@ -39,4 +41,7 @@ export class Paper {
   // tag: string;
   @OneToMany(() => Tag, tag => tag.paper)
   tag: Tag[];
+
+  @ManyToMany(()=> Label , label=>label.paper)
+  labels: Label[];
 }

@@ -6,13 +6,15 @@ import { Comment } from '@/module/comment/comment.entity';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tag } from '../tag/tag.entitiy';
+import { Label } from '../label/entities/label.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Paper,
       Comment,
-      Tag
+      Tag,
+      Label
     ]),
   ],
   controllers: [PaperController],

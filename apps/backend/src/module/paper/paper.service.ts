@@ -4,17 +4,38 @@ import { Like, Repository, EntityManager } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { Paper } from './paper.entity';
 import { Tag } from '../tag';
+import { Label } from '../label/entities/label.entity';
 
 @Injectable()
 export class PaperService {
   private paperRepository: Repository<Paper>;
+  private manager: EntityManager;
 
   constructor(@InjectEntityManager() manager: EntityManager) {
     this.paperRepository = manager.getRepository(Paper);
+    this.manager = manager;
   }
 
   create(params: createParamProps) {
-    return this.paperRepository.save(params);
+    const paper = new Paper();
+
+    const { labels } = params;
+
+    const labelInstanceList: Label[] = []
+    labels.forEach(async(labelStr: string) => {
+      const labelInstance = new Label();
+      labelInstance.label = labelStr;
+      await labelInstanceList.push(labelInstance)
+      // await this.manager.save(labelInstance);
+    });
+
+    Object.assign(paper, {
+      ...params,
+      labels: labelInstanceList,
+    });
+
+    // return this.paperRepository.save(paper);
+    return this.manager.save(paper);
   }
 
   delete(id: string) {
@@ -22,13 +43,13 @@ export class PaperService {
   }
 
   update(id: string, params: createParamProps) {
-    return this.paperRepository.update(id, params);
+    // return this.paperRepository.update(id, params);
   }
 
   async getPaper(id: string) {
     const current = await this.paperRepository.findOneOrFail({
       where: { id },
-      relations: ['tag' , 'comment'],
+      relations: ['tag', 'comment'],
     });
     const { createdAt: currentPaperCreatedAt } = current;
 

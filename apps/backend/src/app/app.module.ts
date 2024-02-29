@@ -10,6 +10,8 @@ import { Paper, PaperModule } from '../module/paper';
 import { Reply, ReplyModule } from '../module/reply';
 import { Comment, CommentModule } from '../module/comment/';
 import { Tag, TagModule } from '../module/tag/';
+import { LabelModule } from '@/module/label/label.module';
+import { Label } from '@/module/label/entities/label.entity';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { Tag, TagModule } from '../module/tag/';
         CommentModule,
         ReplyModule,
         TagModule,
+        LabelModule
       ],
       useFactory: (configService: ConfigService) => {
         const databaseConfig: databaseProp = configService.get('database');
@@ -34,7 +37,8 @@ import { Tag, TagModule } from '../module/tag/';
             Paper,
             Comment,
             Reply,
-            Tag
+            Tag,
+            Label
           ],
           synchronize: true,
         };

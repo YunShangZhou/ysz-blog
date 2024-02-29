@@ -3,4 +3,5 @@ export interface createParamProps{
   description?: string;
   content: string;
   cover?: string;
+  labels: string[]
 }
