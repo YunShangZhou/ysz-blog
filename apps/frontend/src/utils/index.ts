@@ -7,13 +7,15 @@ export const formatDate = (date: Date) => {
   return dayjs(date).format('YYYY/MM/DD HH:mm:ss');
 };
 
-export const createQueryString = (config: {
-  name: string;
-  value: string;
-  searchParams: any;
-}) => {
-  const { name, value, searchParams } = config;
+export const createQueryString = (
+  searchParams: any,
+  // data: { name: string; value: any }[]
+  data: { name: string; value: string }[]
+) => {
   const params = new URLSearchParams(searchParams.toString());
-  params.set(name, value);
+
+  data.forEach(({ name, value }) => {
+    params.set(name, value);
+  });
   return params.toString();
 };

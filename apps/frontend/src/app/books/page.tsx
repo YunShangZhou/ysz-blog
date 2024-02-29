@@ -1,54 +1,54 @@
 'use client';
 import { Pagination } from 'antd';
 import PaperList from 'src/components/PaperList';
-import { mockPaperList } from 'src/constant';
-import { paperProps } from 'src/type';
-
-import { notFound, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {
+  notFound,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 import { createQueryString } from '@/utils/index';
 import { useEffect, useState } from 'react';
-
-const PAGE_SIZE = 8;
-
-interface paginationPaperListProps {
-  data: paperProps[];
-  total: number;
-  currentPage: number;
-  size: number;
-}
+import service from 'src/service';
+import { paginationDataSourceProps, queryItemProps } from '@/type/books';
+import { PAGE_SIZE } from '@/constant/books';
 
 export default function Books() {
-  // const dataSource = await service.books.getPaperList();
-
   const router = useRouter();
   const pathname = usePathname();
 
   const searchParams = useSearchParams();
-  const page = searchParams.get('page') || 1;
-  const pageSize = searchParams.get('pageSize') || 1;
+
+  const page = searchParams.get('page');
+  const pageSize = searchParams.get('pageSize');
   const tag = searchParams.get('tag');
 
   if (!page || !pageSize) {
-    notFound()
+    notFound();
   }
 
-  const [dataSource, setDataSource] = useState<paperProps[]>(mockPaperList);
+  const [dataSource, setDataSource] = useState<paginationDataSourceProps>();
 
   // TODO: 拉取文章数据
   const fetchDataSource = async () => {
     const params = {
       page: +page,
-      pageSize: PAGE_SIZE,
-      tag,
+      pageSize: +PAGE_SIZE,
     };
 
-    const dataSource = await mockPaperList;
+    tag && Object.assign(params, { tag });
+
+    let { code, data } = await service.books.getPaperListByPage(params);
+    code !== 0 && notFound();
+    setDataSource(data);
   };
 
-  // const res:paginationPaperListProps = await fetch('http://localhost:3000/api/paper/list');
+  useEffect(() => {
+    fetchDataSource();
+  }, [page]);
 
   return (
-    <div className="h-full border border-solid border-black-400">
+    <div className="h-full flex flex-col border border-solid border-black-400">
       {tag && (
         <div className="font-bold text-[20px]">
           搜索
@@ -56,22 +56,36 @@ export default function Books() {
           的结果:
         </div>
       )}
-      <PaperList dataSource={dataSource} />
-      <div className="flex justify-center">
-        <Pagination
-          total={100 || dataSource.length}
-          pageSize={PAGE_SIZE}
-          showSizeChanger={false}
-          onChange={(page) => {
-            const queryString = createQueryString({
-              name: 'page',
-              value: `${page}`,
-              searchParams,
-            });
+      <div className='flex-1 flex flex-col justify-between'>
+        <PaperList showFooter={false} dataSource={dataSource!?.items} />
+        <div className="flex pb-[32px] justify-center">
+          <Pagination
+            total={dataSource!?.total}
+            pageSize={PAGE_SIZE}
+            showSizeChanger={false}
+            onChange={(page) => {
+              const queryList: queryItemProps[] = [
+                {
+                  name: 'page',
+                  value: page,
+                },
+                {
+                  name: 'pageSize',
+                  value: PAGE_SIZE,
+                },
+              ];
+              if (tag) {
+                queryList.push({
+                  name: 'tag',
+                  value: tag,
+                });
+              }
 
-            router.push(`${pathname}?${queryString}`);
-          }}
-        />
+              const queryString = createQueryString(searchParams, queryList);
+              router.push(`${pathname}?${queryString}`);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

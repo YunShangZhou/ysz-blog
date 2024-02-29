@@ -98,14 +98,6 @@ export default async function Paper(props: {
     );
   }
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-full mb-[20px] flex flex-col items-center">

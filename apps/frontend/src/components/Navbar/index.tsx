@@ -5,36 +5,35 @@ import Link from 'next/link';
 import { SearchOutlined } from '@ant-design/icons';
 import logoImg from '@/assets/image/logo.png';
 import Image from 'next/image';
+import { PAGE, PAGE_SIZE } from '@/constant/books';
 
 const Navbar = () => {
   const [searchText, setSearchText] = useState('');
 
   const handleClick = () => {};
 
-  const navItems = [
-    {
-      label: '博客',
-      link: '/books',
-    },
-    {
-      label: '技术追新',
-      link: '/books',
-    },
-    {
-      label: '阅读书籍',
-      link: '/books',
-    },
-    {
-      label: '关于',
-      link: '',
-    },
+  const navItems: { label: string; link: string }[] = [
+    // {
+    //   label: '博客',
+    //   link: `/books/?page=${PAGE}&pageSize=${PAGE_SIZE}`,
+    // },
+    // {
+    //   label: '阅读书籍',
+    //   link: '/books',
+    // },
+    // {
+    //   label: '关于',
+    //   link: '',
+    // },
   ];
 
   return (
-    <div className="w-full px-[20px] py-[5px] flex align-items-center justify-between border rounded-[8px] border-black border-solid">
+    <div className="w-full px-[20px] py-[5px] flex align-items-center justify-between border rounded-[8px] border-black-400 border-solid">
       <div className="flex-1 text-[16px] flex gap-10 items-center">
-        <Link className='text-[24px] shadow cursor-[pointer]' href="/">Blog</Link>
-        {navItems.map((item) => {
+        <Link className="text-[24px] shadow cursor-[pointer]" href="/">
+          Blog
+        </Link>
+        {navItems?.map((item) => {
           return (
             <Link key={item.label} href={item.link} className="text-[14px]">
               {item.label}

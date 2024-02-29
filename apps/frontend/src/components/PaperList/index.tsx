@@ -6,10 +6,11 @@ import { paperProps } from 'src/type';
 
 interface IProps {
   dataSource: paperProps[];
+  showFooter?: boolean;
 }
 
 const PaperList = (props: IProps) => {
-  const { dataSource } = props;
+  const { dataSource, showFooter = true } = props;
   return (
     <div className="flex flex-col gap-[12px]">
       {dataSource?.map((item) => {
@@ -35,33 +36,37 @@ const PaperList = (props: IProps) => {
               {description}
             </span>
             <Markdown>{limitContent}</Markdown>
-            <div className="mt-[12px] flex justify-between">
-              <div className="flex items-center gap-[8px]">
-                <span className="text-[16px]">标签:</span>
-                <div className="flex items-center gap-[4px]">
-                  {!tag.length && '暂无'}
-                  {tag.map(({ tag }) => {
-                    return (
-                      <Link
-                        key={tag}
-                        className="hover:text-blue-400"
-                        href={`/books/?tag=${tag}`}
-                      >
-                        {tag}
-                      </Link>
-                    );
-                  })}
+            {showFooter && (
+              <>
+                <div className="mt-[12px] flex justify-between">
+                  <div className="flex items-center gap-[8px]">
+                    <span className="text-[16px]">分类:</span>
+                    <div className="flex items-center gap-[4px]">
+                      {!tag?.length && '暂无'}
+                      {tag?.map(({ tag }) => {
+                        return (
+                          <Link
+                            key={tag}
+                            className="hover:text-blue-400"
+                            href={`/books/?tag=${tag}`}
+                          >
+                            {tag}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <Link
+                    className="hover:text-blue-400"
+                    suppressHydrationWarning
+                    href={`/paper/?id=${id}#comment`}
+                    target="_blank"
+                  >
+                    评论{`(${Math.floor(Math.random() * 100)})`}
+                  </Link>
                 </div>
-              </div>
-              <Link
-                className="hover:text-blue-400"
-                suppressHydrationWarning
-                href={`/paper/?id=${id}#comment`}
-                target="_blank"
-              >
-                评论{`(${Math.floor(Math.random() * 100)})`}
-              </Link>
-            </div>
+              </>
+            )}
           </div>
         );
       })}

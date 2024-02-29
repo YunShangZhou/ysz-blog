@@ -9,6 +9,7 @@ import Link from 'next/link';
 import PaperList from 'src/components/PaperList';
 import { Suspense } from 'react';
 import service from 'src/service';
+import { PAGE, PAGE_SIZE } from '@/constant/books';
 
 const categories = [
   {
@@ -28,7 +29,7 @@ const categories = [
 const Main = async () => {
   try {
     let dataSource: any[] = [];
-    const { code, data }= await service.home.getPaginationPaperList({
+    const { code, data } = await service.home.getPaginationPaperList({
       page: 1,
       pageSize: 4,
     });
@@ -40,7 +41,10 @@ const Main = async () => {
       <div className="flex-1 flex flex-col gap-[20px] p-[12px] h-full border border-solid border-black-50">
         <div className="bold text-[24px]">最新文章</div>
         <PaperList dataSource={dataSource} />
-        <Link className="text-blue-500" href="/books">
+        <Link
+          className="text-blue-500"
+          href={`/books/?page=${PAGE}&pageSize=${PAGE_SIZE}`}
+        >
           更多内容...
         </Link>
       </div>

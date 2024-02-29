@@ -1,19 +1,28 @@
-import axios from 'axios';
-
-const booksInstance = axios.create({
-  baseURL: '/',
-  timeout: 3000, // 3s
-});
-
-// booksInstance.interceptors.request(requestHandler)
+import { jointResponse } from '@/utils/responseHandler';
+import { baseInstance } from './instance';
+import { paginationDataSourceByTagProps } from '@/type/books';
 
 const apiMap = {
-  async getPaginationPaperList(params: {
-    type: string;
+  async getPaperListByPage(params: {
+    tag?: string;
     page: number;
     pageSize: number;
   }) {
-    const res = await booksInstance.post("",params);
+    const { tag } = params;
+
+    const requestUrl = tag
+      ? '/tag/getPaperListByTagAndCount'
+      : '/paper/getPaperListByPage/';
+
+    let res: jointResponse = await baseInstance.post(requestUrl, params);
+
+    if (tag) {
+      const { items } = res.data as paginationDataSourceByTagProps;
+      res.data.items = items.map((item) => {
+        return item.paper;
+      });
+    }
+
     return res;
   },
 };
