@@ -24,7 +24,7 @@ async function bootstrap() {
   const port = CONNECTION_PORT;
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀🚀🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
 }
 
