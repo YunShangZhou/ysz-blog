@@ -17,9 +17,9 @@ export class CommentService {
     this.commentRepository = manager.getRepository(Comment);
   }
 
-  async create(id: string, params: CreateCommentDto) {
+  async create(paperId: number, params: CreateCommentDto) {
     const relatedPaper = await this.paperRepository.findOneBy({
-      id,
+      id:paperId
     });
     
     if (!relatedPaper) {
@@ -36,7 +36,7 @@ export class CommentService {
     this.commentRepository.save(newComment);
   }
 
-  async getAll(paperId: string) {
+  async getAll(paperId: number) {
     const relatedComment = await this.paperRepository.findOne({
       where: { id: paperId },
       relations: ['comment', 'comment.reply'],

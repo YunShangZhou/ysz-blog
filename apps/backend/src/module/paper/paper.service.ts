@@ -1,55 +1,85 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { createParamProps } from '../../type/paper';
-import { Like, Repository, EntityManager } from 'typeorm';
+import { Like, Repository, EntityManager, SelectQueryBuilder, createQueryBuilder } from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { Paper } from './paper.entity';
-import { Tag } from '../tag';
-import { Label } from '../label/entities/label.entity';
+import { Label } from '../label/label.entity';
+import { LabelService } from '../label/label.service';
 
 @Injectable()
 export class PaperService {
   private paperRepository: Repository<Paper>;
-  private manager: EntityManager;
 
-  constructor(@InjectEntityManager() manager: EntityManager) {
-    this.paperRepository = manager.getRepository(Paper);
-    this.manager = manager;
+  constructor(@InjectEntityManager() private readonly manager: EntityManager,
+
+  ) {
+    this.paperRepository = this.manager.getRepository(Paper);
   }
 
-  create(params: createParamProps) {
+  async create(params: createParamProps) {
     const paper = new Paper();
 
     const { labels } = params;
-
-    const labelInstanceList: Label[] = []
-    labels.forEach(async(labelStr: string) => {
+    const labelList: Label[] = []
+    for (const value of labels) {
       const labelInstance = new Label();
-      labelInstance.label = labelStr;
-      await labelInstanceList.push(labelInstance)
-      // await this.manager.save(labelInstance);
-    });
+      labelInstance.label = value;
+      await labelList.push(labelInstance)
+      await this.manager.save(labelInstance);
+    }
 
     Object.assign(paper, {
       ...params,
-      labels: labelInstanceList,
+      labels: labelList,
     });
 
-    // return this.paperRepository.save(paper);
-    return this.manager.save(paper);
+    return this.paperRepository.save(paper);
   }
 
-  delete(id: string) {
-    return this.paperRepository.delete(id);
+  async delete(paperId: number) {
+    let toDelete = await this.paperRepository.findOne({
+      where: {
+        id: paperId
+      }
+    });
+    let deleted = false;
+    if (toDelete) {
+      await this.paperRepository.remove(toDelete);
+      deleted = true;
+    }
+    return { deleted };
   }
 
-  update(id: string, params: createParamProps) {
-    // return this.paperRepository.update(id, params);
+  async update(paperId: number, params: createParamProps) {
+    let toUpdate = await this.paperRepository.findOneBy({
+      id: paperId
+    });
+    let updated = false;
+    if (toUpdate) {
+      const { labels } = params;
+      const labelList: Label[] = []
+      for (const value of labels) {
+        const labelInstance = new Label();
+        labelInstance.label = value;
+        await labelList.push(labelInstance)
+        await this.manager.save(labelInstance);
+      }
+
+      Object.assign(toUpdate, {
+        ...params,
+        labels: labelList,
+      });
+
+      await this.paperRepository.save(toUpdate);
+      updated = true
+    }
+    return { updated };
   }
 
-  async getPaper(id: string) {
+  async getPaper(paperId: number) {
     const current = await this.paperRepository.findOneOrFail({
-      where: { id },
-      relations: ['tag', 'comment'],
+      where: { id: paperId },
+      relations: ['labels', 'comment'],
     });
     const { createdAt: currentPaperCreatedAt } = current;
 
@@ -82,30 +112,94 @@ export class PaperService {
 
   getPaperList() {
     return this.paperRepository.find({
-      relations: ['tag'],
+      relations: ["labels"],
     });
   }
 
-  async getPaperListByPage(page: number, pageSize: number) {
-    const params: Record<string, any> = {
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      order: {
-        id: 'DESC',
-      },
-    };
+  async getPaperListPagination(page: number, pageSize: number) {
     const [items, total] = await this.paperRepository.findAndCount({
       skip: (page - 1) * pageSize,
       take: pageSize,
       order: {
         id: 'DESC',
       },
-      relations: ['tag'],
+      relations: ['labels'],
     });
 
     return {
       items,
       total,
     };
+  }
+
+  // RELATED: label
+  async getLabelsByPaperId(paperId: number) {
+    const result = await this.paperRepository.findOne(
+      {
+        select: ["labels"],
+        where: {
+          id: paperId
+        },
+        relations: ["labels"]
+      }
+    )
+
+    return result;
+  }
+
+  async deleteLabel(paperId: number, labelId: number) {
+    const paper = await this.paperRepository.findOne({
+      relations: ["labels"],
+      where: { id: paperId }
+    })
+    paper.labels = paper.labels.filter((label: Label) => {
+      return label.id !== labelId
+    })
+    await this.manager.save(paper)
+  }
+
+  async getSearchPaperListPagination(params: { searchValue: string, page: number, pageSize: number }) {
+    const { searchValue, page, pageSize } = params;
+    const pagination = await this.paperRepository.findAndCount({
+
+      // notice:对象形式为交叉查询
+      // where: {
+      //   content: Like(`%${searchValue}%`),
+      //   title: Like(`%${searchValue}%`),
+      // },
+
+      // notice:数组形式为联合查询
+      where: [
+        {
+          title: Like(`%${searchValue}%`),
+        },
+        {
+          content: Like(`%${searchValue}%`),
+        },
+        {
+          description: Like(`%${searchValue}%`),
+        },
+      ],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      relations: ["labels"],
+      order: {
+        id: 'DESC'
+      }
+    })
+
+    let match = false;
+    if (pagination) {
+      const [items, total] = pagination
+      match = true
+
+      return {
+        match,
+        items,
+        total
+      }
+    }
+
+    return { match }
   }
 }

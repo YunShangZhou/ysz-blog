@@ -8,7 +8,7 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { ResponseInterceptor } from './interceptor';
-import { ErrorFilter } from './exception/errorException';
+import { AllExceptionsFilter } from './exception/errorException';
 
 const CONNECTION_PORT = 3002;
 
@@ -18,7 +18,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new ErrorFilter());
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const port = CONNECTION_PORT;

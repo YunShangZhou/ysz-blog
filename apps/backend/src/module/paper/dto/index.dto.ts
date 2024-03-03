@@ -20,18 +20,28 @@ export class CreatePaperDto {
 }
 
 export class UpdatePaperDto {
-  @IsString()
-  id: string;
+  id: number;
 
   @ValidateNested()
   @Type(() => CreatePaperDto)
   data: CreatePaperDto;
 }
 
-export class GetPaperListByPageDto {
+export class getPaperListPaginationDto {
   @IsInt()
   page: number;
 
   @IsInt()
   pageSize: number;
+}
+
+export class getPaperListPaginationByLabelDto {
+  @IsInt()
+  page: number;
+
+  @IsInt()
+  pageSize: number;
+
+  @IsString()
+  label: string;
 }

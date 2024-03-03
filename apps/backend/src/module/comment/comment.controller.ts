@@ -9,12 +9,12 @@ export class CommentController {
   @Post('create/:paperId')
   // @Redirect('http://localhost:3000/paper',302)
   async create(
-    @Param('paperId') paperId: string,
+    @Param('paperId') paperId: number,
     @Body() createCommentDto: CreateCommentDto,
     @Response() res,
     @Request() req
   ) {
-    this.commentService.create(paperId, createCommentDto);
+    this.commentService.create(+paperId, createCommentDto);
 
     // notice: @Redirect的override并没有生效
     // return {
@@ -22,13 +22,13 @@ export class CommentController {
     // }
 
     const origin = req.get('origin');
-    const redirectUrl = `${origin}/paper/?id=${paperId}`
+    const redirectUrl = `${origin}/paper/?id=${+paperId}`
     // 代替方案
     res.redirect(redirectUrl)
   }
 
   @Get('getAll/:paperId')
-  async getAll(@Param('paperId') paperId: string) {
-    return this.commentService.getAll(paperId);
+  async getAll(@Param('paperId') paperId: number) {
+    return this.commentService.getAll(+paperId);
   }
 }

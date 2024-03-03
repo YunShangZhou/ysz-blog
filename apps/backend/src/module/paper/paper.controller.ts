@@ -15,17 +15,22 @@ import { createParamProps } from '../../type/paper';
 import { TypeORMExceptionFilter } from '../../exception/typeormException';
 import {
   CreatePaperDto,
-  GetPaperListByPageDto,
+  getPaperListPaginationDto,
+  getPaperListPaginationByLabelDto,
   UpdatePaperDto,
 } from './dto/index.dto';
 import { EntityNotFoundExceptionFilter } from '../../exception/entityException';
+import { LabelService } from '../label/label.service';
 
 @Controller('paper')
 @UseFilters(EntityNotFoundExceptionFilter)
 export class PaperController {
   constructor(
-    @Inject(forwardRef(()=> PaperService))
-    private readonly paperService: PaperService) {}
+    @Inject(forwardRef(() => PaperService))
+    private readonly paperService: PaperService,
+    @Inject(forwardRef(() => LabelService))
+    private labelService: LabelService
+  ) { }
 
   @Post('create')
   create(@Body(new ValidationPipe()) createPaperDto: CreatePaperDto) {
@@ -33,20 +38,20 @@ export class PaperController {
   }
 
   @Post('update')
-  update(@Body() updatePaperDto: UpdatePaperDto) {
-    const { id, data } = updatePaperDto;
+  update(@Body() updatePaperDto: { paperId: number, data: CreatePaperDto }) {
+    const { paperId, data } = updatePaperDto;
 
-    return this.paperService.update(id, data);
+    return this.paperService.update(paperId, data);
   }
 
-  @Get('delete/:paperId')
-  delete(@Param('paperId') paperId: string) {
-    return this.paperService.delete(paperId);
+  @Post('delete/:paperId')
+  delete(@Param('paperId') paperId: number) {
+    return this.paperService.delete(+paperId);
   }
 
   @Get('getPaper/:paperId')
-  getPaper(@Param('paperId') paperId: string) {
-    return this.paperService.getPaper(paperId);
+  getPaper(@Param('paperId') paperId: number) {
+    return this.paperService.getPaper(+paperId);
   }
 
   @Get('getPaperList')
@@ -54,12 +59,46 @@ export class PaperController {
     return this.paperService.getPaperList();
   }
 
-  @Post('getPaperListByPage')
-  getPaperListByPage(
+  @Post('getPaperListPagination')
+  getPaperListPagination(
     @Body(new ValidationPipe())
-    getPaperListByPageDto: GetPaperListByPageDto
+    getPaperListPaginationDto: getPaperListPaginationDto
   ) {
-    const { page, pageSize } = getPaperListByPageDto;
-    return this.paperService.getPaperListByPage(page, pageSize);
+    const { page, pageSize } = getPaperListPaginationDto;
+    return this.paperService.getPaperListPagination(page, pageSize);
+  }
+
+  @Post('getPaperListPaginationByLabel')
+  getPaperListPaginationByLabel(
+    @Body()
+    params: getPaperListPaginationByLabelDto
+  ) {
+    const { page, pageSize, label } = params;
+    return this.labelService.getPaperListPaginationByLabel({
+      page, pageSize, label
+    });
+  }
+
+
+  @Post('getLabelsByPaperId/:id')
+  getLabelsByPaperId(@Param('paperId') paperId: number) {
+    return this.paperService.getLabelsByPaperId(+paperId)
+  }
+
+  @Post('deleteLabel/:paperId/:labelId')
+  deleteLabel(
+    @Param('paperId') paperId: number,
+    @Param('labelId') labelId: number
+  ) {
+    return this.paperService.deleteLabel(paperId, labelId)
+  }
+
+  @Post('getSearchPaperListPagination')
+  getSearchPaperListPagination(@Body() params: {
+    searchValue: string,
+    page: number,
+    pageSize: number,
+  }) {
+    return this.paperService.getSearchPaperListPagination(params)
   }
 }

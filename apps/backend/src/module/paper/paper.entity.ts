@@ -8,13 +8,12 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { Comment } from '@/module/comment/comment.entity'
-import { Tag } from '../tag/tag.entitiy';
-import { Label } from '../label/entities/label.entity';
+import { Label } from '../label/label.entity';
 
 @Entity()
 export class Paper {
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @Column({ length: 20 })
   title: string;
@@ -37,11 +36,6 @@ export class Paper {
   @OneToMany(() => Comment, comment => comment.paper)
   comment: Comment[];
 
-  // @Column()
-  // tag: string;
-  @OneToMany(() => Tag, tag => tag.paper)
-  tag: Tag[];
-
-  @ManyToMany(()=> Label , label=>label.paper)
+  @ManyToMany(()=> Label , label=>label.papers)
   labels: Label[];
 }

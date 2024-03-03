@@ -5,19 +5,18 @@ import { Paper } from './paper.entity';
 import { Comment } from '@/module/comment/comment.entity';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tag } from '../tag/tag.entitiy';
-import { Label } from '../label/entities/label.entity';
+import { Label } from '../label/label.entity';
+import { LabelService } from '../label/label.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Paper,
       Comment,
-      Tag,
       Label
     ]),
   ],
   controllers: [PaperController],
-  providers: [PaperService],
+  providers: [PaperService, LabelService],
 })
 export class PaperModule { }

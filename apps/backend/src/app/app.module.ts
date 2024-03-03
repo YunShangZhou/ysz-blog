@@ -9,9 +9,8 @@ import configuration, { databaseProp } from '../config/configuration';
 import { Paper, PaperModule } from '../module/paper';
 import { Reply, ReplyModule } from '../module/reply';
 import { Comment, CommentModule } from '../module/comment/';
-import { Tag, TagModule } from '../module/tag/';
 import { LabelModule } from '@/module/label/label.module';
-import { Label } from '@/module/label/entities/label.entity';
+import { Label } from '@/module/label/label.entity';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { Label } from '@/module/label/entities/label.entity';
         PaperModule,
         CommentModule,
         ReplyModule,
-        TagModule,
         LabelModule
       ],
       useFactory: (configService: ConfigService) => {
@@ -37,10 +35,10 @@ import { Label } from '@/module/label/entities/label.entity';
             Paper,
             Comment,
             Reply,
-            Tag,
             Label
           ],
           synchronize: true,
+          // logging: true,
         };
       },
       inject: [ConfigService],
@@ -49,4 +47,4 @@ import { Label } from '@/module/label/entities/label.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
