@@ -21,7 +21,7 @@ export default function Books() {
 
   const page = searchParams.get('page');
   const pageSize = searchParams.get('pageSize');
-  const tag = searchParams.get('tag');
+  const label = searchParams.get('label');
 
   if (!page || !pageSize) {
     notFound();
@@ -36,7 +36,7 @@ export default function Books() {
       pageSize: +PAGE_SIZE,
     };
 
-    tag && Object.assign(params, { tag });
+    label && Object.assign(params, { label });
 
     let { code, data } = await service.books.getPaperListByPage(params);
     code !== 0 && notFound();
@@ -49,15 +49,15 @@ export default function Books() {
 
   return (
     <div className="h-full flex flex-col border border-solid border-black-400">
-      {tag && (
+      {label && (
         <div className="font-bold text-[20px]">
           搜索
-          <span className="text-red-500">{tag}</span>
+          <span className="text-red-500">{label}</span>
           的结果:
         </div>
       )}
       <div className='flex-1 flex flex-col justify-between'>
-        <PaperList showFooter={false} dataSource={dataSource!?.items} />
+        <PaperList showFooter={true} dataSource={dataSource!?.items} />
         <div className="flex pb-[32px] justify-center">
           <Pagination
             total={dataSource!?.total}
@@ -74,10 +74,10 @@ export default function Books() {
                   value: PAGE_SIZE,
                 },
               ];
-              if (tag) {
+              if (label) {
                 queryList.push({
-                  name: 'tag',
-                  value: tag,
+                  name: 'label',
+                  value: label,
                 });
               }
 

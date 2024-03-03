@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "be": "npx nx serve backend",
+    "be": "npx nx serve backend --verbose",
     "fe": "npx nx dev frontend",
     "prepare": "husky",
     "commitlint": "commitlint --edit"

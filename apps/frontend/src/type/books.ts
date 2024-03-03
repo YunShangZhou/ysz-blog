@@ -1,9 +1,9 @@
 import { paperProps } from './paper';
 
-export interface paperAndTagProps {
+export interface paperAndLabelProps {
   id: number;
-  tag: string;
-  paper: paperProps;
+  label: string;
+  papers: paperProps[];
 }
 
 export interface paginationDataSourceProps {
@@ -11,14 +11,14 @@ export interface paginationDataSourceProps {
   total: number;
 }
 
-export interface paginationDataSourceByTagProps {
-  items: paperAndTagProps[];
+export interface paginationDataSourceByLabelProps {
+  items: paperAndLabelProps[];
   total: number;
 }
 
 export type booksDataSourceProps =
   | paginationDataSourceProps
-  | paginationDataSourceByTagProps;
+  | paginationDataSourceByLabelProps;
 
 export interface queryItemProps {
   name: string;

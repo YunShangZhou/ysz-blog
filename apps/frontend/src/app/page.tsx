@@ -13,15 +13,15 @@ import { PAGE, PAGE_SIZE } from '@/constant/books';
 
 const categories = [
   {
-    tag: 'ts',
+    label: 'ts',
     count: 16,
   },
   {
-    tag: 'rust',
+    label: 'rust',
     count: 12,
   },
   {
-    tag: 'node',
+    label: 'node',
     count: 8,
   },
 ];
@@ -29,7 +29,7 @@ const categories = [
 const Main = async () => {
   try {
     let dataSource: any[] = [];
-    const { code, data } = await service.home.getPaginationPaperList({
+    const { code, data } = await service.home.getPaperListPagination({
       page: 1,
       pageSize: 4,
     });
@@ -87,14 +87,14 @@ const Sidebar = async () => {
       <div className="flex flex-col">
         <span className="text-[18px] font-bold mb-[12px]">文章分类</span>
         <div className="flex flex-col gap-[8px]">
-          {categories.map(({ tag, count }) => {
+          {categories.map(({ label, count }) => {
             return (
               <Link
                 className="hover:text-blue-400"
-                key={tag}
-                href={`/books/?tag=${tag}&page=${1}&pageSize=${4}`}
+                key={label}
+                href={`/books/?label=${label}&page=${1}&pageSize=${4}`}
               >
-                {`${tag}(${count})`}
+                {`${label}(${count})`}
               </Link>
             );
           })}

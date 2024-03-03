@@ -1,27 +1,27 @@
 import { jointResponse } from '@/utils/responseHandler';
 import { baseInstance } from './instance';
-import { paginationDataSourceByTagProps } from '@/type/books';
+import { paginationDataSourceByLabelProps } from '@/type/books';
 
 const apiMap = {
   async getPaperListByPage(params: {
-    tag?: string;
+    label?: string;
     page: number;
     pageSize: number;
   }) {
-    const { tag } = params;
+    const { label } = params;
 
-    const requestUrl = tag
-      ? '/tag/getPaperListByTagAndCount'
-      : '/paper/getPaperListByPage/';
+    const requestUrl = label
+      ? '/paper/getPaperListPaginationByLabel'
+      : '/paper/getPaperListPagination/';
 
     let res: jointResponse = await baseInstance.post(requestUrl, params);
 
-    if (tag) {
-      const { items } = res.data as paginationDataSourceByTagProps;
-      res.data.items = items.map((item) => {
-        return item.paper;
-      });
-    }
+    // if (label) {
+    //   const { items } = res.data as paginationDataSourceByLabelProps;
+    //   res.data.items = items.map((item) => {
+    //     return item.papers[0];
+    //   });
+    // }
 
     return res;
   },

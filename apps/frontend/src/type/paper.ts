@@ -6,7 +6,7 @@ export interface paperProps {
   content: string;
   cover?: string;
   description?: string;
-  tag: { id: number; tag: string }[];
+  labels: { id: number; label: string }[];
   comment?: commentProps;
 }
 
