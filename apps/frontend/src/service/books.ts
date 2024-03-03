@@ -4,15 +4,22 @@ import { paginationDataSourceByLabelProps } from '@/type/books';
 
 const apiMap = {
   async getPaperListByPage(params: {
+    searchValue?: string;
     label?: string;
     page: number;
     pageSize: number;
   }) {
-    const { label } = params;
+    const { label, searchValue } = params;
 
-    const requestUrl = label
-      ? '/paper/getPaperListPaginationByLabel'
-      : '/paper/getPaperListPagination/';
+    let requestUrl: string = ""
+
+    if (searchValue) {
+      requestUrl = '/paper/getPaperListPaginationBySearch'
+    } else if (label) {
+      requestUrl = '/paper/getPaperListPaginationByLabel'
+    } else {
+      requestUrl = '/paper/getPaperListPagination/'
+    }
 
     let res: jointResponse = await baseInstance.post(requestUrl, params);
 

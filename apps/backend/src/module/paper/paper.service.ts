@@ -158,7 +158,7 @@ export class PaperService {
     await this.manager.save(paper)
   }
 
-  async getSearchPaperListPagination(params: { searchValue: string, page: number, pageSize: number }) {
+  async getPaperListPaginationBySearch(params: { searchValue: string, page: number, pageSize: number }) {
     const { searchValue, page, pageSize } = params;
     const pagination = await this.paperRepository.findAndCount({
 

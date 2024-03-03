@@ -3,14 +3,18 @@ import { Input } from 'antd';
 import { useState } from 'react';
 import Link from 'next/link';
 import { SearchOutlined } from '@ant-design/icons';
-import logoImg from '@/assets/image/logo.png';
-import Image from 'next/image';
 import { PAGE, PAGE_SIZE } from '@/constant/books';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const [searchText, setSearchText] = useState('');
-
-  const handleClick = () => {};
+  const router = useRouter();
+  const handleClick = () => {
+    router.push(
+      `/books/?searchValue=${searchText}&page=${PAGE}&pageSize=${PAGE_SIZE}`
+    );
+    setSearchText('');
+  };
 
   const navItems: { label: string; link: string }[] = [
     // {
@@ -49,7 +53,7 @@ const Navbar = () => {
           const value = e?.target?.value;
           setSearchText(value);
         }}
-        placeholder="搜索文章..."
+        placeholder="搜索关键字..."
         onPressEnter={handleClick}
         suffix={
           <SearchOutlined

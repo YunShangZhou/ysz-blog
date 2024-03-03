@@ -93,12 +93,12 @@ export class PaperController {
     return this.paperService.deleteLabel(paperId, labelId)
   }
 
-  @Post('getSearchPaperListPagination')
-  getSearchPaperListPagination(@Body() params: {
+  @Post('getPaperListPaginationBySearch')
+  getPaperListPaginationBySearch(@Body() params: {
     searchValue: string,
     page: number,
     pageSize: number,
   }) {
-    return this.paperService.getSearchPaperListPagination(params)
+    return this.paperService.getPaperListPaginationBySearch(params)
   }
 }

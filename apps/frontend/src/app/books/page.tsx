@@ -1,5 +1,5 @@
 'use client';
-import { Pagination } from 'antd';
+import { Empty, Pagination } from 'antd';
 import PaperList from 'src/components/PaperList';
 import {
   notFound,
@@ -22,6 +22,7 @@ export default function Books() {
   const page = searchParams.get('page');
   const pageSize = searchParams.get('pageSize');
   const label = searchParams.get('label');
+  const searchValue = searchParams.get('searchValue');
 
   if (!page || !pageSize) {
     notFound();
@@ -36,16 +37,21 @@ export default function Books() {
       pageSize: +PAGE_SIZE,
     };
 
-    label && Object.assign(params, { label });
+    if (searchValue) {
+      Object.assign(params, { searchValue });
+    } else if (label) {
+      Object.assign(params, { label });
+    }
 
     let { code, data } = await service.books.getPaperListByPage(params);
     code !== 0 && notFound();
+
     setDataSource(data);
   };
 
   useEffect(() => {
     fetchDataSource();
-  }, [page]);
+  }, [page, searchValue]);
 
   return (
     <div className="h-full flex flex-col border border-solid border-black-400">
@@ -56,8 +62,14 @@ export default function Books() {
           的结果:
         </div>
       )}
-      <div className='flex-1 flex flex-col justify-between'>
-        <PaperList showFooter={true} dataSource={dataSource!?.items} />
+      <div className="flex-1 flex flex-col justify-between">
+        {dataSource!?.items.length > 0 ? (
+          <>
+            <PaperList showFooter={true} dataSource={dataSource!?.items} />
+          </>
+        ) : (
+          <Empty description={'暂无文章数据'} />
+        )}
         <div className="flex pb-[32px] justify-center">
           <Pagination
             total={dataSource!?.total}

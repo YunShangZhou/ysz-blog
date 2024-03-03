@@ -134,7 +134,7 @@ export default async function Paper(props: {
         </span>
 
         <div className="w-full">
-          {!comment.length && <Empty description={'暂无评论'} />}
+        {!comment.length && <Empty description={'暂无评论'} />}
 
           {comment.map((item: commentProps) => {
             return <Comment key={item.id} {...item} />;
