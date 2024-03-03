@@ -20,12 +20,12 @@ export class LabelService {
     async getPaperListPaginationByLabel(params: { label: string, page: number, pageSize: number }) {
         const { page, pageSize, label } = params;
 
-        const [items, total] = await this.labelRepository.findAndCount({
+        let [items, total] = await this.labelRepository.findAndCount({
             select: ['papers'],
             where: {
                 label
             },
-            relations: ['papers'],
+            relations: ['papers', 'papers.labels'],
             skip: (page - 1) * pageSize,
             take: pageSize,
             order: {
@@ -33,9 +33,20 @@ export class LabelService {
             }
         })
 
+        // notice: 数据转化&去重
+        const paperIdList: number[] = []; // 防止列表渲染出相同的文章（一个文章拥有多个相同标签。）
+        items = items.reduce((acc, cur) => {
+            const paper = cur.papers[0];
+            if (!paperIdList.includes(paper.id)) {
+                paperIdList.push(paper.id)
+                acc.push(paper)
+            }
+            return acc;
+        }, [])
+
         return {
-          items,
-          total,
+            items,
+            total: items.length,
         };
     }
 }
