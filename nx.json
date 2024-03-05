@@ -42,11 +42,33 @@
         "devTargetName": "dev",
         "startTargetName": "start"
       }
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "previewTargetName": "preview",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "serveStaticTargetName": "serve-static"
+      }
     }
   ],
   "generators": {
     "@nx/react": {
-      "library": {}
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      },
+      "application": {
+        "babel": true,
+        "style": "scss",
+        "linter": "eslint",
+        "bundler": "vite"
+      },
+      "component": {
+        "style": "scss"
+      }
     },
     "@nx/next": {
       "application": {
