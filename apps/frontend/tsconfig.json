@@ -3,10 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/assets/*": ["src/assets/*"],
-      "@/utils/*": ["src/utils/*"],
-      "@/type/*": ["src/type/*"],
-      "@/constant/*": ["src/constant/*"]
+      "@/*": ["src/*"]
+      // "@/assets/*": ["src/assets/*"],
+      // "@/utils/*": ["src/utils/*"],
+      // "@/type/*": ["src/type/*"],
+      // "@/constant/*": ["src/constant/*"]
     },
     "jsx": "preserve",
     "allowJs": true,
@@ -23,7 +24,7 @@
         "name": "next"
       }
     ],
-    "types": ["jest", "node" , "class-validator"]
+    "types": ["jest", "node", "class-validator"]
   },
   "include": [
     "**/*.ts",
